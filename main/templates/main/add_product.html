@@ -1,0 +1,132 @@
+{% extends 'main/main.html' %}
+{% load static %}
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block style %}
+table {
+	border: 1px solid black;
+}
+table td, table th{
+	width: 150px;
+	height: 120px;
+	text-align: center;
+}
+item1 {
+	display: flex;
+	align-items: center;
+}
+.item {
+	width: 100px;
+	height: 100px;
+	margin: 10px;
+}
+.box {
+	display: flex;
+	text-align: center;
+	margin: 2px;
+	border-bottom: 1px solid black;
+}
+.table {
+	display: flex;
+	justify-content: space-around;
+}
+.search_input {
+	margin-bottom: 10px;
+}
+{% endblock %}
+
+{% block script %}
+{% endblock %}
+
+{% block content %}
+	<div class="search_input">
+		<form method="get" action="{% url 'search_add_product' %}">
+			<input class="form-control" type="text" name="q" placeholder="Найти...">
+
+		</form>
+	</div>
+<div class="row">
+	<div class="table">
+	<table border="1">
+				<tr>
+					<th>Номер товара</th>
+					<th>Кол-во товара</th>
+					<th>Изображение</th>
+					<th>Добавить товар на склад</th>
+					<th>Удалить товар полностью</th>
+					<th>Редактировать фото</th>
+				</tr>
+	{% for Product in object_list %}
+				<tr>
+				<td>{{ Product.product_id }}</td>
+				<td>{{ Product.product_count }}</td>
+			    <td><a href="{% url 'product_page' Product.pk %}"><img src="/media/{{ Product.product_image }}" width=100 height=100></td></a>
+			    <td>
+			    	<form method="post" action="{% url 'add_product_count' %}">
+						{% csrf_token %}
+						<input type="hidden" name='product_pk' value='{{ Product.pk }}'>
+						<input type="hidden" name='product_id' value='{{ Product.product_id }}'>
+						<input type="hidden" name="product_count" value="{{ Product.product_count }}">
+						<input type="text" class="form-control" name="add_product_count">
+						<button type="submit" class="btn btn-success">Добавить</button>
+					</form>
+			    </td>
+			    <td>
+			    	<form action="{% url 'delete_product' %}" method="post">
+			    		{% csrf_token %}
+			    		<input type="hidden" name='product_id' value='{{ Product.product_id }}'>
+			    		<button type="submit" class="btn btn-danger">Удалить</button>
+			    		<div>{{ Product.product_name }}</div>
+			    	</form>
+			    </td>
+			    <td>
+			    	<form method="post" enctype="multipart/form-data" action="{% url 'edit_product' %}">
+			    	{% csrf_token %}
+			    	<div class="flex ">
+			    		<input type="hidden" name='product_pk' value='{{ Product.pk }}'>
+			    		<input type="hidden" name='product_id' value='{{ Product.product_id }}'>
+			<!-- 		<input type="text" name="product_name" class="form-control" placeholder="Введите название товара" maxlength="30" 				required="" id="id_product_name"> 
+						<input type="text" name="product_price" class="form-control" placeholder="Введите закупочную цену" required="" id="id_product_price"> 
+						<input type="text" name="product_size" class="form-control" placeholder="Введите размер" maxlength="15" required="" id="id_product_size"> -->
+					</div>
+					<br>
+					<input type="file" name="product_image" accept="image/*" required="" id="id_product_image"> <br>
+					<br>
+			    	<button type="submit" class="btn btn-success">Upload</button>
+			  		</form>
+			    </td>
+			    </tr>
+	{% endfor %}
+	</table>
+	</div>
+</div>
+
+
+
+
+
+
+
+<!-- <form id="myForm">
+    Title:   <input name="title" /><br>
+    Content: <input name="content" />
+</form>
+<button id="postBtn">Post</button><br>
+
+<br>
+<div id="paramsSent"\>
+<div id="return" \>
+<script>
+$('#postBtn').click(function() {
+    var str = $('#myForm').serialize();
+    $('#paramsSent').html(str);
+    
+    $.post('yourPostPath',
+          str,
+          function(data){
+              $('#return').html(data);
+          });
+ });</script> -->
+{% endblock %}

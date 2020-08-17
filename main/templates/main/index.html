@@ -1,0 +1,61 @@
+{% extends 'main/main.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block style %}
+.i {
+    display: flex;
+    justify-content: space-around;
+}
+.item1, .item2{
+    background: white;
+    text-decoration: none;
+    color: black;
+    width: 150%;
+    height: 130%;
+    border-radius: 30px;
+    text-align: center;
+    border: 1px solid black;
+}
+.item:hover {
+    text-decoration: none;
+}
+.item1:hover, .item2:hover {
+    background: black;
+    color: white;
+}
+.flexindex {
+    display: flex;
+    justify-content: space-around;
+}
+{% endblock %}
+
+{% block content %}
+<div class="flexindex">
+    <a class="item" href="{% url 'product' %}"><div><div class="item1">New product</div></div></a>
+
+    <a class="item" href="{% url 'add_product' %}"><div><div class="item1">Add product</div></div></a>
+
+    <a class="item" href="{% url 'order' %}"><div><div class="item2">New order</div></div></a>
+</div>
+
+
+
+
+
+
+
+   <!-- <h4>База клиентов:</h4>
+    {% if tasks %}
+        {% for el in tasks %}
+            <div class="alert alert-warning mt-2">
+                <h3>{{ el.title }}</h3>
+                <p>{{ el.task }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>У вас нету записей!</p>
+    {% endif %} -->
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'main/main.html' %}
+{% block title %}
+Страница товара
+{% endblock %}
+
+{% block content %}
+
+	<div class="post-entry">
+		<h2>{{ object.product_name }}</h2>
+		<p>{{ object.product_id }}</p>
+		Доступность:
+		<div>{{ object.product_count }}</div>
+		<div>
+      		<img src="../../media/{{ object.product_image }}" style="width: 100px">
+    	</div><br>
+
+
+	<form method="post" action="{% url 'add_product_count_page' %}">
+		{% csrf_token %}
+		<input type="hidden" name='product_pk' value='{{ object.pk }}'>
+		<input type="hidden" name='product_id' value='{{ object.product_id }}'>
+		<input type="hidden" name="product_count" value="{{ object.product_count }}">
+		<input type="text" class="form-control" name="add_product_count">
+		<button type="submit" class="btn btn-success">Добавить</button>
+	</form>
+	</div> <br>
+	  	<form method="post" enctype="multipart/form-data" action="{% url 'edit_product' %}">
+    	{% csrf_token %}
+    	<div class="flex ">
+    		<input type="hidden" name='product_pk' value='{{ object.pk }}'>
+    		<input type="hidden" name='product_id' value='{{ object.product_id }}'>
+<!-- 			<input type="text" name="product_name" class="form-control" placeholder="Введите название товара" maxlength="30" required="" id="id_product_name"> 
+			<input type="text" name="product_price" class="form-control" placeholder="Введите закупочную цену" required="" id="id_product_price"> 
+			<input type="text" name="product_size" class="form-control" placeholder="Введите размер" maxlength="15" required="" id="id_product_size"> -->
+		</div>
+		<br>
+		<input type="file" name="product_image" accept="image/*" required="" id="id_product_image"> <br>
+		<br>
+    	<button type="submit" class="btn btn-success">Upload</button>
+  		</form>
+{% endblock %}

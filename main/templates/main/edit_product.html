@@ -1,0 +1,21 @@
+{% extends 'main/main.html' %}
+
+{% block title %}
+Редактирование товара.
+{% endblock %}
+
+{% block content %}
+  	<form method="post" enctype="multipart/form-data">
+    	{% csrf_token %}
+    	<div class="flex ">
+    		{{ form.product_id }}
+			{{ form.product_name }} 
+			{{ form.product_price }} 
+			{{ form.product_size }}
+		</div>
+		<br>
+		{{ form.product_image }} <br>
+		<br>
+    	<button type="submit" class="btn btn-success">Upload</button>
+  	</form>
+{% endblock %}

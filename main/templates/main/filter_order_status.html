@@ -1,0 +1,90 @@
+{% extends 'main/main.html' %}
+
+{% block title %}
+{{ name }}
+{% endblock %}
+
+{% block style %}
+table {
+	width: 100%;
+}
+table td{
+	width: 100px;
+	height: 50px;
+	text-align: center;
+}
+.item{
+	display: none;
+}
+#menu{
+	width: 50px;
+	height: 50px;
+}
+#menu:hover li{
+	display: inline;
+}
+ul:hover li{
+	display: inline;
+}
+{% endblock %}
+
+{% block head %}
+	<link rel="stylesheet" type="text/css" href="select/css/generic.css" />
+	<link rel="stylesheet" type="text/css" href="select/css/style.css" />
+	<script type='text/javascript' src='select/js/select.js'></script>
+{% endblock %}
+
+{% block content %}
+<form method="get" action="{% url 'filter_order_status' %}">
+		<input type="checkbox" class="checked" name="qq" value="Новый">
+		<span>Новый</span>
+		<input type="checkbox" class="checked" name="qq" value="Согласовывается">
+		<span>Согласовывается</span>
+		<input type="checkbox" class="checked" name="qq" value="Собирается">
+		<span>Собирается</span>
+		<input type="checkbox" class="checked" name="qq" value="Доставляется">
+		<span>Доставляется</span>
+		<input type="checkbox" class="checked" name="qq" value="Выполнен">
+		<span>Выполнен</span>
+		<input type="checkbox" class="checked" name="qq" value="Отменен">
+		<span>Отменен</span>
+	<button class="btn btn-success" type="submit">Фильтровать</button>
+</form> 
+{% for Order in object_list %}
+ 	<table border="1">
+		<tr>
+			<td>{{ Order.order_id }}</td>
+			<td>
+				<form method="post" action="{% url 'change_order_status' %}">
+				{% csrf_token %}
+					<input type="hidden" name="order_pk" value="{{ Order.pk }}">
+					<select class='form-control' name="order_status">
+						<option value="Новый">Новый</option>
+						<option value="Согласовывается">Согласовывается</option>
+						<option value="Собирается">Собирается</option>
+						<option value="Доставляется">Доставляется</option>
+						<option value="Выполнен">Выполнен</option>
+						<option value="Отменен">Отменен</option>
+					</select>
+					<button type="submit" class="btn btn-success">Изменить статус</button>
+				</form>
+			</td>
+			<td>
+				{{ Order.order_status }}
+			</td>
+			<td>{{ Order.order_name }}</td>
+		    <td>{{ Order.order_contain }}</td>
+		    <td>
+		    	<a class="btn btn-success" href="{% url 'order_page' Order.pk %}"></a>
+<!-- 		    	<form method="post" action="">
+					{% csrf_token %}
+					<input type="hidden" name='product_id' value='{{ Product.product_id }}'>
+					<input type="hidden" name="product_count" value="{{ Product.product_count }}">
+					<input type="text" class="form-control" name="add_product_count">
+					<button type="submit" class="btn btn-success">Добавить</button>
+				</form> -->
+		    </td>
+		</tr>
+	</table>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,62 @@
+{% extends 'main/main.html' %}
+
+{% block title %}
+{{ name }}
+{% endblock %}
+
+{% block style %}
+.item1, .item2, .item3, .item4, .item5 {
+	align-content: center;
+}
+.item {
+	margin: auto;
+}
+table td, table th {
+	width: 150px;
+	height: 120px;
+	text-align: center;
+}
+table {
+	width: 100%;
+}
+.search_input {
+	margin-bottom: 10px;
+}
+{% endblock %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block content %}
+    <div id="results"></div>
+	<div class="search_input">
+		<form method="get" action="{% url 'search_product_list' %}">
+			<input class="form-control" type="text" name="q" placeholder="Найти...">
+
+		</form>
+	</div>
+
+	<table border="1">
+		<tr>
+			<th>Номер товара</th>
+			<th>Название товара</th>
+			<th>Закупочная цена</th>
+			<th>Размер</th>
+			<th>Доступность на складе</th>
+			<th>Изображение</th>
+		</tr>
+	</table>
+{% for el in products %}
+		<table id="myTable" border="1">
+		<tr>
+			<td>{{ el.product_id }}</td>
+			<td>{{ el.product_name }}</td>
+		    <td>{{ el.product_price }}</td>
+			<td>{{ el.product_size }}</td>
+			<td>{{ el.product_count }}</td>
+		    <td><img src="../media/{{ el.product_image }}" style="height: 100px"></td>
+		</tr>
+	    </table>
+{% endfor %}
+{% endblock %}

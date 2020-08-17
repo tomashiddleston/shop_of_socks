@@ -1,0 +1,30 @@
+{% extends 'main/main.html' %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block style %}
+.item {
+
+}
+{% endblock %}
+
+{% block script %}
+
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        <div class="flex">
+	        {{ orderform.order_id }}
+	        {{ orderform.order_name }}
+	        {{ orderform.order_address }}
+	        {{ orderform.order_contain }}
+            {{ orderform.order_status }}
+        </div>
+        <button type="submit" class="btn btn-success">Добавить</button>
+        <span>{{ error }}</span>
+    </form>
+{% endblock %}

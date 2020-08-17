@@ -1,0 +1,26 @@
+{% extends 'main/main.html' %}
+{% block title %}
+Страница товара
+{% endblock %}
+
+
+{% block content %}
+
+		<h2>{{ object.order_name }}</h2>
+		<p>{{ object.order_id }}</p>
+		<div class='eblan'>
+			<form action="#" method="post">
+				{{ form.form_status }}
+			</form>
+    	</div><br>      		
+    	<br>
+    	{{ object.order_status }} <br>
+    	    <form method="post" action="{% url 'change_order_status' %}">
+        		{% csrf_token %}
+		        <div class="flex">
+		        	<input type="hidden" name="order_pk" value="{{ object.pk }}">
+		        	<input type="text" name="order_status" placeholder="Введите новый статус...">
+		        </div>
+		        <button type="submit" class="btn btn-success">Изменить статус</button>
+		    </form>
+{% endblock %}
