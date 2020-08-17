@@ -20,6 +20,7 @@ class Product(models.Model):
 	product_count = models.CharField('Доступность', max_length=3, default=0)
 	product_image = models.ImageField(upload_to='photos/%Y/%m/%d/')
 	uploaded_at = models.DateTimeField(auto_now_add=True)
+	slug = models.SlugField(product_id)
 
 	def __str__(self):
 		return self.product_name

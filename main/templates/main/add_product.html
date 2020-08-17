@@ -62,7 +62,7 @@ item1 {
 				<tr>
 				<td>{{ Product.product_id }}</td>
 				<td>{{ Product.product_count }}</td>
-			    <td><a href="{% url 'product_page' Product.pk %}"><img src="/media/{{ Product.product_image }}" width=100 height=100></td></a>
+			    <td><a href="{% url 'product_page' Product.slug %}"><img src="/media/{{ Product.product_image }}" width=100 height=100></td></a>
 			    <td>
 			    	<form method="post" action="{% url 'add_product_count' %}">
 						{% csrf_token %}
