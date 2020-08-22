@@ -74,6 +74,7 @@ ul:hover li{
 			<form method="post" action="{% url 'change_order_status' %}">
 				{% csrf_token %}
 				<input type="hidden" name="order_pk" value="{{ Order.pk }}">
+				<input type="hidden" name="order_content" value="{{ Order.order_contain }}">
 				<select class='form-control' name="order_status">
 					<option value="Новый">Новый</option>
 					<option value="Согласовывается">Согласовывается</option>

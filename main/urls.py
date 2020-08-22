@@ -2,6 +2,8 @@ from django.urls import path
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import views as auth_views
 
 
 urlpatterns = [
@@ -13,6 +15,7 @@ urlpatterns = [
     path('order_list', views.order_list.as_view(), name ='order_list'),
 
     path('add_product', views.add_product.as_view(), name='add_product'),
+    path('add_product_vk', views.add_product_vk, name='add_product_vk'),
     path('edit_product', views.edit_product, name='edit_product'),
     path('add_product_count', views.add_product_count, name='add_product_count'),
     path('add_product_count_page', views.add_product_count_page, name='add_product_count_page'),
