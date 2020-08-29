@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 """Django's command-line utility for administrative tasks."""
+
+# КОНСОЛЬ:
+# git add --all 
+# git commit -m "Текст"
+# git push -u origin master
+
 import os
 import sys
 

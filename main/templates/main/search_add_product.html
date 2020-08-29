@@ -96,6 +96,17 @@ item1 {
 			    	<button type="submit" class="btn btn-success">Upload</button>
 			  		</form>
 			    </td>
+			        <td>
+    	<form action="{% url 'edit_product_vk' %}" method='post'>
+    		{% csrf_token %}
+    		<input type="hidden" name='product_size' value='{{ Product.product_size }}'>
+    		<input type="hidden" name='product_pk' value='{{ Product.product_pk }}'>
+    		<input type="hidden" name='product_id' value='{{ Product.product_id }}'>
+    		<input type="hidden" name='product_image' value='{{ Product.product_image }}'>
+    		<input type="hidden" name='product_count' value='{{ Product.product_count }}'>
+    		<button type='submit' class='btn btn-success'>Edit</button>
+    	</form>
+    </td>
 			    </tr>
 	{% endfor %}
 	</table>

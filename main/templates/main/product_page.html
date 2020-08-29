@@ -3,39 +3,54 @@
 Страница товара
 {% endblock %}
 
-{% block content %}
+{% block style %}
+tr, td {
+	border: 1px solid black;
+	text-align: center;
+	width: 400px;
+	margin: 20px;
+}
+{% endblock %}
 
-	<div class="post-entry">
-		<h2>{{ object.product_name }}</h2>
-		<p>{{ object.product_id }}</p>
-		Доступность:
-		<div>{{ object.product_count }}</div>
+{% block content %}
+<table>
+	<tr>
+	<th>{{ object.product_name }}</th>
+	<th>Пополнить склад</th>
+	<th>Изменить изображение</th>	
+	</tr>
+	<tr>
+	<td>
+		<div class="post-entry">
+		<p>ID: {{ object.product_id }}</p>
+		В наличии: {{ object.product_count }} <br>
+		<br>
 		<div>
       		<img src="../../media/{{ object.product_image }}" style="width: 100px">
-    	</div><br>
-
-
-	<form method="post" action="{% url 'add_product_count_page' %}">
-		{% csrf_token %}
-		<input type="hidden" name='product_pk' value='{{ object.pk }}'>
-		<input type="hidden" name='product_id' value='{{ object.product_id }}'>
-		<input type="hidden" name="product_count" value="{{ object.product_count }}">
-		<input type="text" class="form-control" name="add_product_count">
-		<button type="submit" class="btn btn-success">Добавить</button>
-	</form>
-	</div> <br>
-	  	<form method="post" enctype="multipart/form-data" action="{% url 'edit_product' %}">
+    	</div>
+    </td>
+    <td>
+		<form method="post" action="{% url 'add_product_count_page' %}">
+			{% csrf_token %}
+			<input type="hidden" name='product_pk' value='{{ object.pk }}'>
+			<input type="hidden" name='product_id' value='{{ object.product_id }}'>
+			<input type="hidden" name="product_count" value="{{ object.product_count }}">
+			<input type="text" class="form-control" name="add_product_count">
+			<button type="submit" class="btn btn-success">Добавить</button>
+		</form>
+		</div> <br>
+	</td>
+	<td>
+    	<form method="post" enctype="multipart/form-data" action="{% url 'edit_product' %}">
     	{% csrf_token %}
-    	<div class="flex ">
-    		<input type="hidden" name='product_pk' value='{{ object.pk }}'>
-    		<input type="hidden" name='product_id' value='{{ object.product_id }}'>
-<!-- 			<input type="text" name="product_name" class="form-control" placeholder="Введите название товара" maxlength="30" required="" id="id_product_name"> 
-			<input type="text" name="product_price" class="form-control" placeholder="Введите закупочную цену" required="" id="id_product_price"> 
-			<input type="text" name="product_size" class="form-control" placeholder="Введите размер" maxlength="15" required="" id="id_product_size"> -->
-		</div>
-		<br>
+		<input type="hidden" name='product_pk' value='{{ Product.pk }}'>
+		<input type="hidden" name='product_id' value='{{ Product.product_id }}'>
 		<input type="file" name="product_image" accept="image/*" required="" id="id_product_image"> <br>
 		<br>
     	<button type="submit" class="btn btn-success">Upload</button>
   		</form>
+    	
+	</td>
+  	</tr>
+</table>
 {% endblock %}

@@ -5,27 +5,7 @@
 {% endblock %}
 
 {% block style %}
-table {
-	width: 100%;
-}
-table td{
-	width: 100px;
-	height: 50px;
-	text-align: center;
-}
-.item{
-	display: none;
-}
-#menu{
-	width: 50px;
-	height: 50px;
-}
-#menu:hover li{
-	display: inline;
-}
-ul:hover li{
-	display: inline;
-}
+
 {% endblock %}
 
 {% block head %}
@@ -57,16 +37,27 @@ ul:hover li{
 			<option value="Отменен">Отменен</option> -->
 		</select>
 		<button class="btn btn-success" type="submit">Фильтровать</button>
-	</form> 
-<table border="1">
+	</form> <br>
+	<form action="{% url 'order_need_buy' %}" method="post">
+		{% csrf_token %}
+		{% for Order in object_list %}
+			<input type="hidden" name="order_content" value="{{ Order.order_contain }}">
+		{% endfor %}
+
+		<button type='submit' class='btn btn-success'>Отобразить список</button>
+	</form> <br>
+
+<table class='table table-bordered table-striped  table-hover'>
+	<caption>Список товаров</caption>
 	<tr>
 		<th>Номер заказа</th>
 		<th>Изменить статус заказа</th>
 		<th>Статус заказа</th>
 		<th>ФИО</th>
-		<th>Содержание заказа</th>
+		<th>Составить список закупки</th>
 		<th>Просмотреть заказ</th>
 	</tr>
+
 {% for Order in object_list %}
 	<tr>
 		<td>{{ Order.order_id }}</td>
@@ -74,7 +65,6 @@ ul:hover li{
 			<form method="post" action="{% url 'change_order_status' %}">
 				{% csrf_token %}
 				<input type="hidden" name="order_pk" value="{{ Order.pk }}">
-				<input type="hidden" name="order_content" value="{{ Order.order_contain }}">
 				<select class='form-control' name="order_status">
 					<option value="Новый">Новый</option>
 					<option value="Согласовывается">Согласовывается</option>
@@ -83,16 +73,23 @@ ul:hover li{
 					<option value="Выполнен">Выполнен</option>
 					<option value="Отменен">Отменен</option>
 				</select>
-				<button type="submit" class="btn btn-success">Изменить статус</button>
+				<button type="submit" class="btn btn-sm">Изменить статус</button>
 			</form>
 		</td>
 		<td>
 			{{ Order.order_status }}
 		</td>
 		<td>{{ Order.order_name }}</td>
-		<td>{{ Order.order_contain }}</td>
 		<td>
-		    <a class="btn btn-success" href="{% url 'order_page' Order.pk %}"></a>
+			<form action="{% url 'order_need_buy' %}" method="post">
+				{% csrf_token %}
+					<input type="hidden" name="order_content" value="{{ Order.order_contain }}">
+
+				<button type='submit' class='btn btn-success'>Отобразить список</button>
+			</form>
+		</td>
+		<td>
+		    <a class="btn btn-success" href="{% url 'order_page' Order.pk %}">Order page</a>
 <!-- 		    	<form method="post" action="">
 					{% csrf_token %}
 					<input type="hidden" name='product_id' value='{{ Product.product_id }}'>
