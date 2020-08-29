@@ -25,7 +25,7 @@ SECRET_KEY = '(!(w()^8)wktp$xly)hm8w6b%kl4xi6rif^+qzg94e(u-)on!+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'shopofsocks.ru']
 
 
 # Application definition
@@ -71,7 +71,7 @@ TEMPLATES = [
     },
 ]
 
-# WSGI_APPLICATION = 'base.wsgi.application'
+WSGI_APPLICATION = 'base.wsgi.application'
 
 
 # Database
