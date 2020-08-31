@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpRequest
 from django.db.models import Q
 from .models import Task, Product, Order, Budget, Token
 from .forms import TaskForm, ProductForm, OrderForm, BudgetForm
@@ -415,7 +415,11 @@ def vkgettoken(request):
 	client_secret = '3gi802fi8D7nB7sgC2m9'
 	version = 5.122
 	group_id = 197063065
-	redirect_uri = 'http://127.0.0.1:8000/vkgettoken'
+	print (request.get_host())
+	if request.get_host() == '127.0.0.1:8000':
+		redirect_uri = 'http://127.0.0.1:8000/vkgettoken'
+	elif request.get_host() == 'shopofsocks.ru':
+		redirect_uri = 'http://shopofsocks.ru/vkgettoken'
 	scopes = 'market,photos'
 	get_access_token = requests.get('https://oauth.vk.com/access_token',
 							params = {
@@ -438,7 +442,7 @@ def vkgettoken(request):
 
 	token_object.save()
 
-	return HttpResponseRedirect('home')
+	return HttpResponseRedirect('')
 
 @login_required
 def add_product_vk(request):

@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 # КОНСОЛЬ:
-# git add --all; git commit -m "Сохранение"; git push -u origin master; ssh j1100207@j1100207.myjino.ru; cd prodjects/demo/shop_of_socks; git pull;
+# git add --all; git commit -m "Сохранение"; git push -u origin master; ssh j1100207@j1100207.myjino.ru; 
+# cd projects/demo/shop_of_socks; git pull;
 
 import os
 import sys
