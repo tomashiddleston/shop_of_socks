@@ -445,7 +445,7 @@ def vkgettoken(request):
 
 	token_object.save()
 
-	return redirect('')
+	return redirect('home')
 
 @login_required
 def add_product_vk(request):
