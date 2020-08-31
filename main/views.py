@@ -408,7 +408,7 @@ def vkgetcode(request):
 	scopes = 'market,photos'
 
 	auth_url = 'https://oauth.vk.com/authorize' + '?' + 'client_id=' + str(client_id) + '&display=page&redirect_uri=' + redirect_uri + '&scope=' + scopes + '&response_type=code&v=' + str(version)
-	return HttpResponseRedirect(auth_url)
+	return redirect(auth_url)
 
 @login_required
 def vkgettoken(request):
@@ -445,7 +445,7 @@ def vkgettoken(request):
 
 	token_object.save()
 
-	return HttpResponseRedirect('')
+	return redirect('')
 
 @login_required
 def add_product_vk(request):
