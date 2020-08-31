@@ -401,7 +401,10 @@ def vkgetcode(request):
 	client_secret = '3gi802fi8D7nB7sgC2m9'
 	version = 5.122
 	group_id = 197063065
-	redirect_uri = 'http://127.0.0.1:8000/vkgettoken'
+	if request.get_host() == '127.0.0.1:8000':
+		redirect_uri = 'http://127.0.0.1:8000/vkgettoken'
+	elif request.get_host() == 'shopofsocks.ru':
+		redirect_uri = 'http://shopofsocks.ru/vkgettoken'
 	scopes = 'market,photos'
 
 	auth_url = 'https://oauth.vk.com/authorize' + '?' + 'client_id=' + str(client_id) + '&display=page&redirect_uri=' + redirect_uri + '&scope=' + scopes + '&response_type=code&v=' + str(version)
