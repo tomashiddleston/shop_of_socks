@@ -500,9 +500,14 @@ def add_product_vk(request):
 	group_id = 197063065
 	redirect_uri = 'http://127.0.0.1:8000/change_order_status'
 	scopes = 'market,photos'
-	files = {
+	if request.get_host() == '127.0.0.1:8000':
+		files = {
 		'file': open('media/' + product_image, 'rb')
-	}
+		}
+	elif request.get_host() == 'shopofsocks.ru':
+		files = {
+			'file': open('/home/users/j/j1100207/projects/demo/shop_of_socks/media/' + product_image, 'rb')
+		}
 
 	auth_url = 'https://oauth.vk.com/authorize' + '?' + 'client_id=' + str(client_id) + '&display=page&redirect_uri=' + redirect_uri + '&scope=' + scopes + '&response_type=code&v=' + str(version)
 
