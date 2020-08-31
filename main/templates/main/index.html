@@ -40,22 +40,19 @@
 
     <a class="item" href="{% url 'order' %}"><div><div class="item2">New order</div></div></a>
 </div>
+<br>
 
+<form action="{% url 'home' %}" method='post'>
+{% csrf_token %}
+{{ form.earn }}
+{{ form.budget_name }}
+<button type='submit' class='btn btn-success'>Добавить</button>
+</form>
 
+{% for el in budget %}
+{{ el.uploaded_at }} | {{ el.budget_tag }} | {{ el.earn }} | 
+{{ el.budget_name }} <br>
+{% endfor %}
 
-
-
-
-
-   <!-- <h4>База клиентов:</h4>
-    {% if tasks %}
-        {% for el in tasks %}
-            <div class="alert alert-warning mt-2">
-                <h3>{{ el.title }}</h3>
-                <p>{{ el.task }}</p>
-            </div>
-        {% endfor %}
-    {% else %}
-        <p>У вас нету записей!</p>
-    {% endif %} -->
+{{ budget_sum }}
 {% endblock %}

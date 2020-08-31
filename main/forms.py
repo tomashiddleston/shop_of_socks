@@ -1,4 +1,4 @@
-from .models import Task, Product, Order
+from .models import Task, Product, Order, Budget
 from django.forms import ModelForm, TextInput, Textarea, ImageField, ClearableFileInput, Select
 
 
@@ -65,4 +65,19 @@ class OrderForm(ModelForm):
                 'class': 'form-control',
                 'placeholder': 'Введите содержание заказа',
             }),
+        }
+
+class BudgetForm(ModelForm):
+    class Meta:
+        model = Budget
+        fields = ["budget_name", "earn"]
+        widgets = {
+            "budget_name": TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'На что?',
+            }),
+            "earn": TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Сколько?',
+            })
         }

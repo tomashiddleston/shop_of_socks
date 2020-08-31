@@ -43,4 +43,17 @@ class Order(models.Model):
 		verbose_name = 'Заказ'
 		verbose_name_plural = 'Заказы'
 
+class Budget(models.Model):
+	budget_name = models.CharField('На что?', max_length=100)
+	earn = models.FloatField('Доход/Расход')
+	uploaded_at = models.DateTimeField(auto_now_add=True)
+	budget_tag = models.CharField('Тэг', max_length=50, default='null')
+
+
+	class Meta:
+		verbose_name = 'Бюджет'
+		verbose_name_plural = 'Бюджет'
+
+class Token(models.Model):
+	access_token = models.CharField('Токен доступа', max_length=100)
 

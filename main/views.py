@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.db.models import Q
-from .models import Task, Product, Order
-from .forms import TaskForm, ProductForm, OrderForm
+from .models import Task, Product, Order, Budget, Token
+from .forms import TaskForm, ProductForm, OrderForm, BudgetForm
 from django.views.generic import ListView, DetailView
 import requests
 import vk
@@ -12,8 +12,30 @@ from django.conf import settings
 
 @login_required
 def index(request):
-	tasks = Task.objects.all()
-	return render(request, 'main/index.html', {'title': 'Главная страница сайта', 'tasks': tasks})
+	if request.method == 'POST':
+		form = BudgetForm(request.POST)
+		if form.is_valid():
+			form.save()
+			return redirect('home')
+		else:
+			error = 'Что-то пошло не так..'
+
+	budget = Budget.objects.all()
+
+	budget_sum = 0
+
+	for item in budget:
+		budget_sum += item.earn
+
+	form = BudgetForm()
+	context = {
+		'form': form,
+		'budget': budget,
+		'budget_sum': budget_sum,
+	}
+
+
+	return render(request, 'main/index.html', context)
 
 @login_required
 def about(LoginRequiredMixin, request):
@@ -30,11 +52,13 @@ def create(request):
 		else:
 			error = 'Что-то пошло не так..'
 
+	budget = Budget.objects.all()
 
 	form = TaskForm()
 	context = {
 		'form': form,
 		'error': error,
+		'budget': budget,
 	}
 	return render(request, 'main/create.html', context)
 
@@ -372,7 +396,58 @@ class add_product(LoginRequiredMixin, ListView):
 	template_name = 'main/add_product.html'
 
 @login_required
+def vkgetcode(request):
+	client_id = 7574810
+	client_secret = '3gi802fi8D7nB7sgC2m9'
+	version = 5.122
+	group_id = 197063065
+	redirect_uri = 'http://127.0.0.1:8000/vkgettoken'
+	scopes = 'market,photos'
+
+	auth_url = 'https://oauth.vk.com/authorize' + '?' + 'client_id=' + str(client_id) + '&display=page&redirect_uri=' + redirect_uri + '&scope=' + scopes + '&response_type=code&v=' + str(version)
+	return HttpResponseRedirect(auth_url)
+
+@login_required
+def vkgettoken(request):
+	code = request.GET.get('code')
+	print ('КОДДД', code)
+	client_id = 7574810
+	client_secret = '3gi802fi8D7nB7sgC2m9'
+	version = 5.122
+	group_id = 197063065
+	redirect_uri = 'http://127.0.0.1:8000/vkgettoken'
+	scopes = 'market,photos'
+	get_access_token = requests.get('https://oauth.vk.com/access_token',
+							params = {
+								'client_id': client_id,
+								'client_secret': client_secret,
+								'redirect_uri': redirect_uri,
+								'v': version,
+								'code': code,
+							}
+							)
+
+	new_access_token = get_access_token.json()['access_token']
+	print (new_access_token)
+
+	token_object = Token.objects.get(pk=1)
+	access_token = token_object.access_token
+	print ('СТАРЫЙ ТОКЕН: ', access_token)
+
+	token_object.access_token = new_access_token
+
+	token_object.save()
+
+	return HttpResponseRedirect('home')
+
+@login_required
 def add_product_vk(request):
+	end = '"photo":"4de5b8f0b3x","sizes":[],"sizes2":[["max","5d4ad2505889b301475723ad3197fb2319c506d354cc70d7e5c521ee","8699078778338907580",1440,1440],["a","f98803ab36efd6937d64616d3f2cd83cca2c33b1677d50d3137f0c36","-2445330089933293795",800,800],["b","db462598e9fd32b911e68944bdb7de5e39adb53187dcd60c927036dc","5981226008241475202",400,400],["c","784fb9e174f7d0fe14bcbae26eb11f388ea6e3da0a2f7e588d920739","2596944398728374318",300,300],["d","f6fe524fc1c8e6bdbb47d6caa69851bce6c2ddd473924a136316a409","8891666904311755021",200,200],["e","39aec961cade0eb6c0bf1a3aad8a8ed3bf017802bf461c5e98f528c1","7938689004032980611",150,150],["f","b7a06ce2db54436d04080323618f31ba8a9a56c3b05bc61f1dc6c8bd","-5021090960027821844",100,100],["g","8422c08dfd93751c56f550a25ec6a48ed55cb063854cc41370894e48","-2252590944185552705",50,50],["o","5d4ad2505889b301475723ad3197fb2319c506d354cc70d7e5c521ee","8699078778338907580",1440,1440]'
+	start = '"photo":"c0eefcc716x","sizes":[],"sizes2":[["max","5d4ad2505889b301475723ad3197fb2319c506d354cc70d7e5c521ee","8699078778338907580",1440,1440],["a","f98803ab36efd6937d64616d3f2cd83cca2c33b1677d50d3137f0c36","-2445330089933293795",800,800],["b","db462598e9fd32b911e68944bdb7de5e39adb53187dcd60c927036dc","5981226008241475202",400,400'
+	print (len(end))
+	print (len(start))
+	code = request.GET.get('code')
+	print ('КОДДД', code)
 	product_size = request.POST['product_size']
 	product_pk = request.POST['product_pk']
 	product_id = request.POST['product_id']
@@ -382,7 +457,6 @@ def add_product_vk(request):
 	album_ids_ = request.POST.getlist("qq")
 	album_ids = ', '.join(album_ids_)
 	product_size_index = product_size[0]
-	print (product_size_index)
 	if product_size == '36-44.':
 		pass
 	elif product_size == '38-42.':
@@ -390,11 +464,9 @@ def add_product_vk(request):
 	else:
 		if product_size_index == '3':
 			album_ids = album_ids + ', 7'
-			print (album_ids)
 		elif product_size_index == '4':
 			album_ids = album_ids + ', 8'
 
-	print (album_ids)
 
 	if product_size == 'One size.':
 		product_description = 'Товар №' + product_id + '.' + '''
@@ -413,12 +485,13 @@ def add_product_vk(request):
 17% Полиамид
 3% Эластан'''
 
-	access_token = '21d046c6c57d4eb56d25cfdd0516eb0dc56350658a1e452da8d06daa75416b2ead7e62c82b511a31bb113'
+	token_object = Token.objects.get(pk=1)
+	access_token = token_object.access_token
 	client_id = 7574810
 	client_secret = '3gi802fi8D7nB7sgC2m9'
 	version = 5.122
 	group_id = 197063065
-	redirect_uri = 'http://127.0.0.1:8000/'
+	redirect_uri = 'http://127.0.0.1:8000/change_order_status'
 	scopes = 'market,photos'
 	files = {
 		'file': open('media/' + product_image, 'rb')
@@ -426,70 +499,37 @@ def add_product_vk(request):
 
 	auth_url = 'https://oauth.vk.com/authorize' + '?' + 'client_id=' + str(client_id) + '&display=page&redirect_uri=' + redirect_uri + '&scope=' + scopes + '&response_type=code&v=' + str(version)
 
-	return HttpResponseRedirect(auth_url)
-
-	print (code)
-	
-	vk_auth = requests.get('https://oauth.vk.com/authorize',
-						params = {
-							'client_id': client_id,
-							'redirect_uri': 'http://127.0.0.1:8000/',
-							'groups_ids': group_id,
-							'display': 'page',
-							'scope': 'market, photos',
-							'response_type': 'code',
-							'v': version,
-						})
-
-	# vk_auth = requests.get('https://oauth.vk.com/access_token',
-	# 					params = {
-	# 						'client_id': client_id,
-	# 						'client_secret': client_secret,
-	# 						'groups_ids': group_id,
-	# 						'display': 'page',
-	# 						'scope': 'market, photos',
-	# 						'response_type': 'token',
-	# 						'v': version,
-	# 					})
-
-	data = vk_auth.json()['response']
-	for row in vk_auth:
-		print(row)
-	print (data)
-
-	getuploadserver = requests.get('https://api.vk.com/method/photos.getMarketUploadServer',
+	getuploadserver = requests.post('https://api.vk.com/method/photos.getMarketUploadServer',
 							params = {
 								'group_id': group_id,
 								'main_photo': 1,
 								'access_token': access_token,
 								'v': version,
-								'crop_width': 400,
+								'crop_width': 2048,
 							}
-
 							)
 
 	upload_server = getuploadserver.json()['response']['upload_url']
 	uploadphoto = requests.post(upload_server, files=files)
-	photos = uploadphoto.json()
 	server = int(uploadphoto.json()['server'])
-	photo = uploadphoto.json()['photo']
+	photo= uploadphoto.json()['photo']
 	hash_ = uploadphoto.json()['hash']
 	crop_data = uploadphoto.json()['crop_data']
 	crop_hash = uploadphoto.json()['crop_hash']
 
-	savephoto = requests.post('https://api.vk.com/method/photos.saveMarketPhoto',
-							params={
-								'group_id': group_id,
-								'photo': photo,
-								'hash': hash_,
-								'crop_data': crop_data,
-								'crop_hash': crop_hash,
-								'server': server,	
-								'access_token': access_token,
-								'v': version,
 
-							})
+	params={
+			'group_id': group_id,
+			'photo': photo,
+			'hash': hash_,
+			'crop_data': crop_data,
+			'crop_hash': crop_hash,
+			'server': server,	
+			'access_token': access_token,
+			'v': version,
+			}
 
+	savephoto = requests.post('https://api.vk.com/method/photos.saveMarketPhoto', data=params)
 	photo = savephoto.json()['response']
 	for row in photo:
 		photo_id = int(row.get('id'))
@@ -509,7 +549,6 @@ def add_product_vk(request):
 						})
 
 	item_id = response.json()['response']['market_item_id']
-	print(item_id)
 
 	addAlbum = requests.get('https://api.vk.com/method/market.addToAlbum',
 							params = {
@@ -521,7 +560,6 @@ def add_product_vk(request):
 							})
 
 	data = addAlbum.json()
-	print (data)
 
 	url = '/product/' + product_id
 	return HttpResponseRedirect(url)
@@ -605,6 +643,7 @@ def edit_product_vk(request):
 	product_id = request.POST['product_id']
 	url = '/product/' + product_id
 	return HttpResponseRedirect(url)
+
 
 
 

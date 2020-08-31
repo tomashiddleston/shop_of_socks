@@ -47,12 +47,20 @@ item1 {
 {% endblock %}
 
 {% block content %}
+<div class='flex'>
 	<div class="search_input">
 		<form method="get" action="{% url 'search_add_product' %}">
 			<input class="form-control" type="text" name="q" placeholder="Найти...">
 
 		</form>
 	</div>
+    <div>
+        <form action="{% url 'vkgetcode' %}" method="post">
+            {% csrf_token %}
+            <button type='submit' class='btn btn-success'>Получить Token</button>
+        </form>
+    </div>
+</div>
 <div class="row">
 <div class="table">
 <table border="1">
@@ -85,6 +93,7 @@ item1 {
     <td class='vk_td'>
     	<form action="{% url 'add_product_vk' %}" method='post'>
     		{% csrf_token %}
+            <input type="hidden" name='access_token' value='{{ access_token }}'>
     		<input type="hidden" name='product_size' value='{{ Product.product_size }}'>
     		<input type="hidden" name='product_pk' value='{{ Product.product_pk }}'>
     		<input type="hidden" name='product_id' value='{{ Product.product_id }}'>

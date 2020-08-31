@@ -33,6 +33,11 @@ urlpatterns = [
     path('search_product_list', views.search_product_list.as_view(), name='search_product_list'),
     path('search_add_product', views.search_add_product.as_view(), name='search_add_product'),
     path('delete_product', views.delete_product, name='delete_product'),
+
+    path('vkgetcode', views.vkgetcode, name='vkgetcode'),
+
+    path('vkgettoken', views.vkgettoken, name='vkgettoken')
+
 ]
 # ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
