@@ -599,18 +599,66 @@ def edit_product_vk(request):
 80% Хлопок 
 17% Полиамид
 3% Эластан'''
+	if request.get_host() == '127.0.0.1:8000':
+		files = {
+		'file': open('media/' + product_image, 'rb')
+		}
+	elif request.get_host() == 'shopofsocks.ru':
+		files = {
+			'file': open('/home/users/j/j1100207/projects/demo/shop_of_socks/media/' + product_image, 'rb')
+		}
 
-
-	access_token = '21d046c6c57d4eb56d25cfdd0516eb0dc56350658a1e452da8d06daa75416b2ead7e62c82b511a31bb113'
+	token_object = Token.objects.get(pk=1)
+	access_token = token_object.access_token
 	client_id = 7574810
 	version = 5.122
 	group_id = 197063065
+	if int(product_id) > 200:
+		offset = 0
+	else: 
+		offset = 200
+
+	getuploadserver = requests.post('https://api.vk.com/method/photos.getMarketUploadServer',
+							params = {
+								'group_id': group_id,
+								'main_photo': 1,
+								'access_token': access_token,
+								'v': version,
+								'crop_width': 2048,
+							}
+							)
+
+	upload_server = getuploadserver.json()['response']['upload_url']
+	uploadphoto = requests.post(upload_server, files=files)
+	server = int(uploadphoto.json()['server'])
+	photo= uploadphoto.json()['photo']
+	hash_ = uploadphoto.json()['hash']
+	crop_data = uploadphoto.json()['crop_data']
+	crop_hash = uploadphoto.json()['crop_hash']
+
+
+	params={
+			'group_id': group_id,
+			'photo': photo,
+			'hash': hash_,
+			'crop_data': crop_data,
+			'crop_hash': crop_hash,
+			'server': server,	
+			'access_token': access_token,
+			'v': version,
+			}
+
+	savephoto = requests.post('https://api.vk.com/method/photos.saveMarketPhoto', data=params)
+	photo = savephoto.json()['response']
+	for row in photo:
+		photo_id = int(row.get('id'))
 
 	market_get = requests.get('https://api.vk.com/method/market.get',
 						params = {
 							'access_token': access_token,
 							'owner_id': -group_id,
 							'v': version,
+							'offset': offset,
 							'count': 200,
 						})
 
@@ -632,12 +680,13 @@ def edit_product_vk(request):
 		else:
 			product_id_ = product_id
 			product_id_vk = description[7:10]
+			print (product_id_vk)
 
 		if product_id_ == product_id_vk:
 			item_id = items
 			break
 
-	print (item_id)
+	print ('item: \n',item_id)
 
 	market_edit = requests.get('https://api.vk.com/method/market.edit',
 						params = {
@@ -646,6 +695,7 @@ def edit_product_vk(request):
 							'v': version,
 							'item_id': item_id,
 							'description': product_description,
+							'main_photo_id': photo_id,
 
 						})
 
