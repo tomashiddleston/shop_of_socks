@@ -70,7 +70,7 @@ class OrderForm(ModelForm):
 class BudgetForm(ModelForm):
     class Meta:
         model = Budget
-        fields = ["budget_name", "earn"]
+        fields = ["budget_name", "earn", "budget_tag"]
         widgets = {
             "budget_name": TextInput(attrs={
                 'class': 'form-control',
@@ -79,5 +79,8 @@ class BudgetForm(ModelForm):
             "earn": TextInput(attrs={
                 'class': 'form-control',
                 'placeholder': 'Сколько?',
-            })
-        }
+            }),
+            "budget_tag": Select(attrs={
+                'class': 'custom-select',
+            }),
+            }

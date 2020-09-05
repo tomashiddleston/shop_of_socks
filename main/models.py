@@ -44,10 +44,20 @@ class Order(models.Model):
 		verbose_name_plural = 'Заказы'
 
 class Budget(models.Model):
+	TAGS = (
+        ('Реклама', 'Реклама'),
+        ('Закуп', 'Закуп'),
+        ('Торговля', 'Торговля'),
+        ('Заказы', 'Заказы'),
+        ('Материалы', 'Материалы'),
+        ('Раскрутка аккаунтов', 'Раскрутка аккаунтов'),
+        )
+
+
 	budget_name = models.CharField('На что?', max_length=100)
 	earn = models.FloatField('Доход/Расход')
 	uploaded_at = models.DateTimeField(auto_now_add=True)
-	budget_tag = models.CharField('Тэг', max_length=50, default='null')
+	budget_tag = models.CharField(max_length=50, default='null', choices=TAGS)
 
 
 	class Meta:

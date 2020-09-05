@@ -339,7 +339,6 @@ def change_order_status(request):
 
 	return redirect ('order_list')
 
-@login_required
 def order_need_buy(request):
 	order_content = request.POST.getlist('order_content')
 	print ('ПОЛУЧИЛИ ДАННЫЕ В ТАКОМ ВИДЕ: \n',order_content)
@@ -359,6 +358,7 @@ def order_need_buy(request):
 	in_stock = []
 
 	for el in order_content:
+		print (el)
 		product = Product.objects.get(product_id=el)
 		product_count = int(product.product_count)
 		if product_count == 0:
@@ -394,6 +394,8 @@ class product_page(LoginRequiredMixin, DetailView):
 class add_product(LoginRequiredMixin, ListView):
 	model = Product
 	template_name = 'main/add_product.html'
+
+
 
 @login_required
 def vkgetcode(request):
@@ -706,12 +708,13 @@ def edit_product_vk(request):
 	url = '/product/' + product_id
 	return HttpResponseRedirect(url)
 
+@login_required
+def budget(request):
+	pass
 
-
-
-
-
-
+@login_required
+def change_budget_tag(request):
+	pass
 
 
 

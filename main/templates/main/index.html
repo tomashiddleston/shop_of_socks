@@ -30,6 +30,14 @@
     display: flex;
     justify-content: space-around;
 }
+#footer {
+    position: fixed; 
+    left: 0; bottom: 0; right: 0; 
+    color: #fff; 
+    width: 100%; }
+#footer div {
+    padding: 10px;
+    background: #39b54a; }
 {% endblock %}
 
 {% block content %}
@@ -46,13 +54,16 @@
 {% csrf_token %}
 {{ form.earn }}
 {{ form.budget_name }}
+{{ form.budget_tag }}
 <button type='submit' class='btn btn-success'>Добавить</button>
 </form>
 
 {% for el in budget %}
-{{ el.uploaded_at }} | {{ el.budget_tag }} | {{ el.earn }} | 
+{{ el.earn }} | {{ el.budget_tag }} | 
 {{ el.budget_name }} <br>
 {% endfor %}
 
-{{ budget_sum }}
+
+
+<div id="footer" class='container'><div>{{ budget_sum }}</div></div>
 {% endblock %}
