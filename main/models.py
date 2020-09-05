@@ -35,7 +35,6 @@ class Order(models.Model):
 	order_address = models.CharField('Адрес покупателя', max_length=100)
 	order_contain = models.CharField('Содержимое заказа', max_length=100)
 	order_status = models.CharField('Статус заказа', max_length=100)
-	slug = models.SlugField(order_id)
 
 	def __str__(self):
 		return self.order_name
