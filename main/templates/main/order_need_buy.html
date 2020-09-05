@@ -40,7 +40,6 @@ table {
 	<table border="1">
 		<tr>
 			<th>Номер товара</th>
-			<th>Название товара</th>
 			<th>Изображение</th>
 		</tr>
 	</table>
@@ -48,8 +47,7 @@ table {
 		<table id="myTable" border="1">
 		<tr>
 			<td>{{ el.product_id }}</td>
-			<td>{{ el.product_name }}</td>
-		    <td><img src="../media/{{ el.product_image }}" style="height: 300px"></td>
+		    <td><img src="../media/{{ el.product_image }}" style="height: 700px"></td>
 		</tr>
 	    </table>
 {% endfor %}
