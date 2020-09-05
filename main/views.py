@@ -319,7 +319,7 @@ def edit_product(request):
 	print (url)
 	return HttpResponseRedirect(url)
 
-
+@login_required
 def change_order_status(request):
 	product = Product.objects.get(product_id=1)
 	product_image = product.product_image
@@ -380,7 +380,7 @@ def order_need_buy(request):
 	return render(request, 'main/order_need_buy.html', context)
 
 
-class filter_order_status(LoginRequiredMixin, ListView):
+class filter_order_status(ListView):
 	model = Order
 	template_name = 'main/filter_order_status.html'
 	def get_queryset(self):
