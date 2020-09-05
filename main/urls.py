@@ -25,7 +25,7 @@ urlpatterns = [
     path('product/<slug:slug>/', views.product_page.as_view(), name='product_page'),
     path('order/<int:pk>/', views.order_page.as_view(), name='order_page'),
 
-    path('order_need_buy', views.order_need_buy, name='order_need_buy'),
+    path('order_need_buy/', views.order_need_buy, name='order_need_buy'),
 
     path('change_order_status', views.change_order_status, name='change_order_status'),
     path('filter_order_status', views.filter_order_status.as_view(), name='filter_order_status'),
