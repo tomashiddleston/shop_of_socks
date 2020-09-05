@@ -319,7 +319,7 @@ def edit_product(request):
 	print (url)
 	return HttpResponseRedirect(url)
 
-@login_required
+
 def change_order_status(request):
 	product = Product.objects.get(product_id=1)
 	product_image = product.product_image
